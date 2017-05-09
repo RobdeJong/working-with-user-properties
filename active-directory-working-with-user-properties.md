@@ -45,29 +45,31 @@ and next to the items in this list, you can also use user properties in your own
 
 There are three typical methods to populate the value of a user's properties:
 
-1. Synchronize the value from on premises Active Directory. This is the most commonly used method to populate your directory with users and user property values, and you would usually use Azure Active directory connect for this. We'll discuss this in more detail below.
-2. Manually set the value for a user's properties through the Azure Active Directory Portal. As an administrator, you can see and modify values of user properties using the User page in the portal. Note that not all properties can be changed - properties who's values are being synced from on premises Active Directory cannot bet changed in Azure Active Directory.
+1. Synchronize the value from on premises Active Directory. This is the most commonly used method to populate your directory with users and user property values, and you would usually use Azure Active directory Connect (AAD Connect) for this. We'll discuss this in more detail below.
+2. Manually set the value for a user's properties through the Azure Active Directory Portal. As an administrator, you can see and modify values of user properties using the User page in the portal. Note that not all properties can be changed - properties who's values are being synced from on premises Active Directory cannot be changed in Azure Active Directory.
 3. Using PowerShell. You can create new users and set user property values using PowerShell cmdlets. You can also write scripts that import user objects and their properties from an external source such as a CSV-file or update user properties from an external source.
 
 When using PowerShell or Azure Active Directory Connect to create or update users in Azure Active Directory you can optionally transform values of properties - for example, you could create a new value for a user's DisplayName by combining the values for FirstName, LastName and Department - so now John Snow who works in the Securities department would have a display name of "John Snow (Securities)".  
 
 ### Populating user properties using PowerShell
 
-You can populate a user's built-in property values using the Set-AzureADUser cmdlet. An example for how to set a user's City property is 
+You can populate a user's built-in property values using the [Set-AzureADUser](https://docs.microsoft.com/en-us/powershell/module/azuread/set-azureaduser?view=azureadps-2.0) cmdlet. An example for how to set a user's City property is 
 
 ```powershell
 Set-AzureADUser -ObjectId AbbieS@WoodGroveOnline.com -City "New York"
 ```
 
-Note that you can only modify property values for users in Azure Active Directory for those properties that are not being synced from on premises Active Directory. If you need to modify the property values for properties that are synced form on premises Active Directory you need to modify the property values in Active Directory, the values will then be synced to Azure Active Directory through Azure Active Directory Connect.
+>Note: You can only modify property values for users in Azure Active Directory for those properties that are not being synced from on premises Active Directory. If you need to modify the property values for properties that are synced form on premises Active Directory you need to modify the property values in Active Directory, the values will then be synced to Azure Active Directory through Azure Active Directory Connect.
 
 ## How can I create new user properties in Azure Active Directory?
 
-The Azure Active Directory schema comes with a wealth of user properties that can be used to provide support for the scenarios you need to implement. However, most customers have e need for specific properties that are not part of the built-in schema of Azure Active Directory. There are three ways you can provide support for properties that are not part of the schema:
+The Azure Active Directory schema comes with a wealth of user properties that can be used to provide support for the scenarios you need to implement. However, most customers have a need for specific properties that are not part of the built-in schema of Azure Active Directory. There are three ways you can provide support for properties that are not part of the schema:
 
-1. Use extensionAttributes - on premises Active Directory supports several different classes of extensionattributes - these are predefined but unused properties that you can use to store data as you see fit. When you sync these properties to Azure Active Directory, the Azure Active Directory schema is automatically extended with these properties and user property values are synced.
-2. Create new user properties in Active Directory and sync them to Azure Active Directory. Just like with extensionAttributes, Azure Active Directory COnnect will extend the Azure Active Directory schema to include these new properties and user property values will be synced.
+1. Use extensionAttributes - on premises Active Directory supports several different classes of extensionAttributes - these are predefined but unused properties that you can use to store data as you see fit. When you sync these properties to Azure Active Directory, the Azure Active Directory schema is automatically extended with these properties and user property values are synced.
+2. Create new user properties in Active Directory and sync them to Azure Active Directory. Just like with extensionAttributes, Azure Active Directory Connect will extend the Azure Active Directory schema to include these new properties and user property values will be synced.
 3. Create you own custom Azure Active Directory schema extensions. Note that Azure Active Directory connect will not sync any data to schema extension properties you created yourself - if you want to populate these properties you would either use Microsoft Graph or PowerShell.
+
+>Note: to see which extensionAttributes are created by Azure Active Directory Connect you can use the cmdlet ```powershell Get-AzureADExtensionProperty -IsSyncedFromOnPremises $true | select Name```
 
 ### Should I create new extension properties or use existing extensionAttribute properties in on premises Active Directory? 
 
@@ -91,11 +93,18 @@ Also consider the size of the data that you want to store. Microsoft recommends 
 
 ### What is the default set of properties that get synced from on premises Active Directory to Azure Active Directory?
 
-
+Which properties get synced from on premises Active Directory to Azure Active Directory depends on the targets that have been selected during the initial configuration of Azure Active Directory Connect. [This article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-attributes-synchronized#attributes-to-synchronize) provides a list for each of the configurable targets.
 
 ### How can I prevent user properties from getting synced to Azure Active Directory?
 
+To prevent an extension user property in Active Directory to get synced to Azure Active Directory you need to remove it from the list of synced properties in the Azure Active Directory Connect configuration. You can find how to do this in [this article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-feature-directory-extensions). To prevent synchronization of data to a built-in property you need to remove the property from the outbound synchronization rules in the Azure Active Directory Connect configuration.
+
+>Note: Removing an extension property from the Azure Active Directory Connect configuration also removes the extension property itself from Azure Active Directory. This is non-recoverable, and the data that was stored in the property is removed from Azure Active Directory. If you need to restore a previously removed extension property, you need to re-add the property to the Azure Active Directory Connect configuration again and synchronize the user data to Azure Active Directory.
+
 ### What is the minimum set of user properties that must get synced to Azure Active Directory?
+
+The barest minimum set of properties that is required for a user object to get synced to Azure Active Directory is are userPrincipalName and accountEnabled. When you sync a user object with these properties populated into Azure Active Directory the user can sign in into the tenant and can perform basic tasks, such as launching an App from the Access Panel. If your users need access to other resources you need to enable the appropriate properties set(s) by selecting the relevant targets during the initial configuration of Azure Active Directory Connect. 
+> Note: The default and recommended approach is to keep the default attributes so a full GAL (Global Address List) can be constructed in the cloud and to get all features in Office 365 workloads.
 
 ### How can I add user properties to get synced to Azure Active Directory?
 
@@ -148,33 +157,19 @@ As you noticed, there are only two properties ("user_name" and "active") that ar
 
 As a first step we need to verify that the data we need to provision into ServiceNow is actually available in the on premises Active Directory. To do that you can use the Attribute Editor: in Active Directory Users and Computers, select View -> Advanced Features, then open a user object and click on the "Attribute Editor" tab. You will now see a list of all user properties that exist in your Active Directory, and you can see (or edit) the values of these properties for the user you selected. When we scroll down the list of properties you will notice that while you can find all of the data we want to provision into ServiceNow, most of the property names in Active directory are different from what is needed in ServiceNow. Fortunately we can configure Azure Active Directory to map the properties with the correct property names in ServiceNow, we'll look at that later.
 
-We will use the following Active Directory properties:
+We will need the following Active Directory properties to sync to Azure Active Directory:
 
 + userPrincipalName
++ accountEnabled
 + sn
 + mail
 + givenName
-+ accountEnabled
-+ l (city)
-+ sn (surname)
-+ st (state)
++ l
++ st
 + streetAddress
 + postalCode
 + telephoneNumber
 + title
-
-+ userPrincipalName
-+ isSoftDeleted
-+ mail
-+ givenName
-+ surname
-+ telephoneNumber
-+ jobTitle
-+ city
-+ mobile
-+ state
-+ streetAddress
-+ postalCode
 
 #### Azure AD Connect
 If you have not yet installed Azure Active Directory Connect, you can do so by following [these steps](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnect#install-azure-ad-connect). 
