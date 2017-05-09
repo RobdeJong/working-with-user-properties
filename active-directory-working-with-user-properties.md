@@ -83,7 +83,8 @@ If you installed Exchange Server in your Active Directory domain or extended the
 
 You can use these properties to store data and sync this data to Azure Active Directory. Note that you will need to enable these attributes to be synced to Azure Active Directory using Azure Active Directory Connect and configure [Directory Extension Attribute Sync](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-feature-directory-extensions). 
 
-If the existing properties in Active Directory do not fit with the type of data you want to store, you should extend the schema. It is important to note that schema additions in Active Directory are permanent; you can disable properties, but you can never remove them from the schema. Keep this in mind when you are testing code.
+If the existing properties in Active Directory do not fit with the type of data you want to store, you should extend the schema. 
+> Note: Schema additions in Active Directory are permanent; you can disable properties, but you can never remove them from the schema. Keep this in mind when you are testing code.
 Also consider the size of the data that you want to store. Microsoft recommends that no property value exceed 500 kilobytes, including the sum of multivalued properties. Also, objects should not exceed 1 megabyte in size. Consider also the number of instances of the data; if you add a new property to the User class on a system that has 100,000 users, this can use up considerable space.
 
 ## Syncing user properties from on premises Active Directory to Azure Active Directory 
