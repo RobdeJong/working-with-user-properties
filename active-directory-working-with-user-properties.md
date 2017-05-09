@@ -101,6 +101,8 @@ To prevent an extension user property in Active Directory to get synced to Azure
 
 >Note: Removing an extension property from the Azure Active Directory Connect configuration also removes the extension property itself from Azure Active Directory. This is non-recoverable, and the data that was stored in the property is removed from Azure Active Directory. If you need to restore a previously removed extension property, you need to re-add the property to the Azure Active Directory Connect configuration again and synchronize the user data to Azure Active Directory.
 
+If you want to remove the value of a built-in property and make sure it does not flow in the future, you need create a custom rule instead. For more details on how to do that, please refer to [this article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-change-the-configuration#other-common-attribute-flow-changes).
+
 ### What is the minimum set of user properties that must get synced to Azure Active Directory?
 
 The barest minimum set of properties that is required for a user object to get synced to Azure Active Directory is are userPrincipalName and accountEnabled. When you sync a user object with these properties populated into Azure Active Directory the user can sign in into the tenant and can perform basic tasks, such as launching an App from the Access Panel. If your users need access to other resources you need to enable the appropriate properties set(s) by selecting the relevant targets during the initial configuration of Azure Active Directory Connect. 
