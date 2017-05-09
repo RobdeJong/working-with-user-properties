@@ -17,7 +17,7 @@ ms.date: 05/09/2017
 ms.author: rodejo
 
 ---
-# Working with user properties in azure Active Directory
+# Working with user properties in Azure Active Directory
 This article explains about how you can work with user properties in Azure Active Directory.
 
 ## What are user properties?
@@ -94,6 +94,35 @@ Also consider the size of the data that you want to store. Microsoft recommends 
 ### What is the default set of properties that get synced from on premises Active Directory to Azure Active Directory?
 
 Which properties get synced from on premises Active Directory to Azure Active Directory depends on the targets that have been selected during the initial configuration of Azure Active Directory Connect. [This article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-attributes-synchronized#attributes-to-synchronize) provides a list for each of the configurable targets.
+
+### How does Azure Active Directory Connect map Active Directory properties to Azure Active Directory properties?
+
+In general Azure Active Directory Connect maps Active Directory properties to Azure Active Directory properties with the same name. However there are some exceptions, these are shown in the below table:
+
+| Active Directory property Name | Azure Active Directory property name |
+| --- | --- |
+| cn | commonName|
+| domainFQDN | dnsDomainName|
+| pwdLastSet | lastPasswordChangeTimestamp|
+| domainNetBios | netBiosName|
+| accountName | onPremisesSamAccountName|
+| objectSid | onPremiseSecurityIdentifier|
+| sourceAnchor | dn|
+| mailNickname | alias|
+| sn | surname|
+| l | city|
+| co | country|
+| c | countryLetterCode|
+| st | state|
+| msDS-HABSeniorityIndex | msDsHabSeniorityIndex|
+| msDS-PhoneticDisplayName | msDsPhoneticDisplayName|
+| msRTCSIP-ApplicationOptions | msRtcSipApplicationOptions|
+| msRTCSIP-DeploymentLocator | msRtcSipDeploymentLocator|
+| msRTCSIP-Line | msRtcSipLine|
+| msRTCSIP-OwnerUrn | msRtcSipOwnerUrn|
+| msRTCSIP-PrimaryUserAddress | msRtcSipPrimaryUserAddress|
+| msRTCSIP-UserEnabled | msRtcSipUserEnabled|
+| msRTCSIP-OptionFlags | msRtcSipOptionFlags|
 
 ### How can I prevent user properties from getting synced to Azure Active Directory?
 
@@ -175,7 +204,7 @@ We will need the following Active Directory properties to sync to Azure Active D
 
 #### Azure AD Connect
 If you have not yet installed Azure Active Directory Connect, you can do so by following [these steps](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnect#install-azure-ad-connect). 
-We will need to configure Azure Active Directory Connect to ensure that the property values we need for ServiceNow are propagated to the Azure Active Directory. We need to use the Configuration Wizard in Azure Active Directory connect to do this. If you open the wizard and authenticate you can forward to the page that allows you to configure "Directory Extensions". On this page, you must verify that 
+We will need to configure Azure Active Directory Connect to ensure that the property values we need for ServiceNow are propagated to the Azure Active Directory. We need to use the Configuration Wizard in Azure Active Directory connect to do this. If you open the wizard and authenticate you can forward to the page that allows you to configure "Directory Extensions". On this page, you must verify that all the attributes 
 
 
 #### Azure Active Directory - ServiceNow as a SaaS app
