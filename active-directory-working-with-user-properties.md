@@ -170,9 +170,13 @@ For users to be able to sign in and use ServiceNow, several steps have to be fol
 4. We must configure the user properties that are used by Azure Active Directory to provision user information into ServiceNow
 5. We must configure the user properties that are user by azure Active directory to enable Single Sign-On for user into ServiceNow.
 
+#### Active Directory
+
+As a first step we need to verify that the data we need to provision into ServiceNow is actually available in the on premises Active Directory. To do that you can use the Attribute Editor: in Active Directory Users and Computers, select View -> Advanced Features, then open a user object and click on the "Attribute Editor" tab. You will now see a list of all user properties that exist in your Active Directory, and you can see (or edit) the values of these properties for the user you selected. When we scroll down the list of properties you will notice that while you can find all of the data we want to provision into ServiceNow, most of the property names in Active directory are different from what is needed in ServiceNow. Fortunately we can configure Azure Active Directory to map the properties with the correct property names in ServiceNow, we'll look at that later.
+
 ServiceNow needs the following user properties to be provided for a user:
 
-| Property | Property in Azure Active Directory | Property in Active Directory |
+| Property in ServiceNow | Property in Azure Active Directory | Property in Active Directory |
 | --- | --- | --- |
 | active (required, "1" = active, "0" = inactive) | softDelete | active |
 | email | email | Mail | 
@@ -182,38 +186,28 @@ ServiceNow needs the following user properties to be provided for a user:
 | user_name (required) | userPrincipalName | userPrincipalName |
 | title | jobTitle | title |
 | city | city | l |
-| mobile_phone | mobilePhone | MobilePhone |
+| mobile_phone | mobilePhone | mobile |
 | state | state | st |
 | street | street | StreetAddress |
 | zip | zipCode | postalCode |
  
 As you noticed, there are only two properties ("user_name" and "active") that are required for users to sign in into ServiceNow - but for ServiceNow to function properly you will probably want to provision many of the other properties as well.
 
-#### Active Directory
-
-As a first step we need to verify that the data we need to provision into ServiceNow is actually available in the on premises Active Directory. To do that you can use the Attribute Editor: in Active Directory Users and Computers, select View -> Advanced Features, then open a user object and click on the "Attribute Editor" tab. You will now see a list of all user properties that exist in your Active Directory, and you can see (or edit) the values of these properties for the user you selected. When we scroll down the list of properties you will notice that while you can find all of the data we want to provision into ServiceNow, most of the property names in Active directory are different from what is needed in ServiceNow. Fortunately we can configure Azure Active Directory to map the properties with the correct property names in ServiceNow, we'll look at that later.
-
-We will need the following Active Directory properties to sync to Azure Active Directory:
-
-+ userPrincipalName
-+ accountEnabled
-+ sn
-+ mail
-+ givenName
-+ l
-+ st
-+ streetAddress
-+ postalCode
-+ telephoneNumber
-+ title
+>Note: Azure Active Directory Connect does not sync a user object if the userPrincipalName is not populated. There are several other rules that Azure Active Directory Connect follows to determine if a user obejct is synced to Azure Active Directory, you can read more about these rules in [this article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-understanding-default-configuration).
 
 #### Azure AD Connect
 If you have not yet installed Azure Active Directory Connect, you can do so by following [these steps](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnect#install-azure-ad-connect). 
-We will need to configure Azure Active Directory Connect to ensure that the property values we need for ServiceNow are propagated to the Azure Active Directory. We need to use the Configuration Wizard in Azure Active Directory connect to do this. If you open the wizard and authenticate you can forward to the page that allows you to configure "Directory Extensions". On this page, you must verify that all the attributes 
 
+<todo: how can I verify that the properties I need are synced from on prem and how can I add missing properties?>
 
 #### Azure Active Directory - ServiceNow as a SaaS app
 
+In the previous steps we have made sure that our Azure Active Directory Connect configuration provides the right set of user properties for the ServiceNow app. Our next step is to enable the ServiceNow app in the Azure Active Directory tenant. Here is a [detailed article](https://docs.microsoft.com/en-us/azure/active-directory/active-directory-saas-servicenow-tutorial#adding-servicenow-from-the-gallery) that describes the all the detailed steps to add the ServiceNow App to your directory.  
+
 ##### User Provisioning settings
 
-##### Single Signon Settings
+Now that we have enabled the ServiceNow app in our tenant we need to configure the provisioning settings. These settings determine which user properties are synced from Azure Active directory to ServiceNow. 
+
+##### Single Sign-on settings
+
+Finally 
