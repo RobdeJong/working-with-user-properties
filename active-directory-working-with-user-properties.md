@@ -93,7 +93,7 @@ Also consider the size of the data that you want to store. Microsoft recommends 
 
 ### What is the default set of properties that get synced from on premises Active Directory to Azure Active Directory?
 
-Which properties get synced from on premises Active Directory to Azure Active Directory depends on the targets that have been selected during the initial configuration of Azure Active Directory Connect. [This article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-attributes-synchronized#attributes-to-synchronize) provides a list for each of the configurable targets.
+Which properties get synced from on premises Active Directory to Azure Active Directory depends on the targets that have been selected during the initial configuration of Azure Active Directory Connect. [This article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-attributes-synchronized#attributes-to-synchronize) provides a list of synced properties for each of the configurable targets.
 
 ### How does Azure Active Directory Connect map Active Directory properties to Azure Active Directory properties?
 
@@ -146,10 +146,15 @@ The barest minimum set of properties that is required for a user object to get s
 #### Which properties should I never sync?
 
 ### How can I remove synced properties and their values for Azure Active Directory?
+If you want to remove the value of a built-in property and make sure it does not flow in the future, you need create a custom rule instead. For more details on how to do that, please refer to [this article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-change-the-configuration#other-common-attribute-flow-changes).
 
 ## How do I provision user properties to a SaaS application?
 
 ### Which user properties should I provision?
+Every SaaS application can have their own specific requirements for which user properties they need to receive, and which user properties can be used optionally. You must consult the provider of the SaaS app for details. Fortunately, Auzre Active Directory comes with many SaaS application pre-configured and you can inspect the Saas app's Provisioning and Single Sign-On settings to see which properties a particular SaaS app requires. 
+If you are configuring a custom built SaaS ap you must consult the organization that built the app.
+
+In the below paragraph we will use a popular SaaS app, "ServiceNow", to demonstrate how you can configure your Azure environment for a SaaS app.  
 
 ### Step-by-step example: How to configure Azure Active Directory so I can sync users from on premises Active Directory to ServiceNow
 
