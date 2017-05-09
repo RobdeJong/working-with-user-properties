@@ -127,7 +127,7 @@ For users to be able to sign in and use ServiceNow, several steps have to be fol
 ServiceNow needs the following user properties to be provided for a user:
 
 | Property | Property in Azure Active Directory | Property in Active Directory |
-| --- | --- |
+| --- | --- | --- |
 | active (required, "1" = active, "0" = inactive) | softDelete | active |
 | email | email | Mail | 
 | first_name | firstName | givenName |
