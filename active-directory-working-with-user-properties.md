@@ -69,7 +69,7 @@ The Azure Active Directory schema comes with a wealth of user properties that ca
 2. Create new user properties in Active Directory and sync them to Azure Active Directory. Just like with extensionAttributes, Azure Active Directory Connect will extend the Azure Active Directory schema to include these new properties and user property values will be synced.
 3. Create you own custom Azure Active Directory schema extensions. Note that Azure Active Directory connect will not sync any data to schema extension properties you created yourself - if you want to populate these properties you would either use Microsoft Graph or PowerShell.
 
->Note: to see which extensionAttributes are created by Azure Active Directory Connect you can use the cmdlet ```powershell Get-AzureADExtensionProperty -IsSyncedFromOnPremises $true | select Name```
+>Note: to see which extensionAttributes are created by Azure Active Directory Connect you can use the cmdlet ```Get-AzureADExtensionProperty -IsSyncedFromOnPremises $true | select Name```
 
 ### Should I create new extension properties or use existing extensionAttribute properties in on premises Active Directory? 
 
