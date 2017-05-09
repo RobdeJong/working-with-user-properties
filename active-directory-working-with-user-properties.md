@@ -37,7 +37,7 @@ Many features of Azure Active Directory use user properties. Here are some of th
 + Use user properties in dynamic groups to manage a user's group memberships. When you assign these dynamic groups to provide access to resources such as Applications, Licenses or SharePoint folders you can implement Attribute Based Access Control to these resources;
 + Search for users or sort users in the Admin Portal;
 + Provision user properties in connected SaaS applications and in other Microsoft services such as SharePoint, Skype and Exchange; 
-+ Configure SAML tokens to (provide user property values as claims)[https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-saml-claims-customization] to SAML-enabled applications.
++ Configure SAML tokens to [provide user property values as claims[([https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-saml-claims-customization) to SAML-enabled applications.
 
 and next to the items in this list, you can also use user properties in your own applications that call Microsoft Graph or use Azure Active Directory PowerShell, or export users and user properties to be used in other applications. 
 
