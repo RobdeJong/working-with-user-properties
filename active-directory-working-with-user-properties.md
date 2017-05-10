@@ -126,7 +126,7 @@ In general Azure Active Directory Connect maps Active Directory properties to Az
 
 ### How can I prevent user properties from getting synced to Azure Active Directory?
 
-To prevent an extension user property in Active Directory to get synced to Azure Active Directory you need to remove it from the list of synced properties in the Azure Active Directory Connect configuration. You can find how to do this in [this article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-feature-directory-extensions). To prevent synchronization of data to a built-in property you need to remove the property from the outbound synchronization rules in the Azure Active Directory Connect configuration.
+To prevent an extension user property in Active Directory to get synced to Azure Active Directory you need to remove it from the list of synced properties in the Azure Active Directory Connect configuration. You can find how to do this in [this article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-feature-directory-extensions). To prevent synchronization of data to a built-in property you need to remove the property from the list of synchronized properties in the Azure Active Directory Connect configuration. [This article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnect-get-started-custom#azure-ad-app-and-attribute-filtering) describes in detail how to do this.
 
 >Note: Removing an extension property from the Azure Active Directory Connect configuration also removes the extension property itself from Azure Active Directory. This is non-recoverable, and the data that was stored in the property is removed from Azure Active Directory. If you need to restore a previously removed extension property, you need to re-add the property to the Azure Active Directory Connect configuration again and synchronize the user data to Azure Active Directory.
 
@@ -178,8 +178,8 @@ ServiceNow needs the following user properties to be provided for a user:
 
 | Property in ServiceNow | Property in Azure Active Directory | Property in Active Directory |
 | --- | --- | --- |
-| active (required, "1" = active, "0" = inactive) | softDelete | active |
-| email | email | Mail | 
+| active (required, "1" = active, "0" = inactive) | softDelete | accountEnabled |
+| email | email | mail | 
 | first_name | firstName | givenName |
 | last_name | lastName | sn |
 | phone | telephoneNumber | telephoneNumber |
@@ -188,12 +188,12 @@ ServiceNow needs the following user properties to be provided for a user:
 | city | city | l |
 | mobile_phone | mobilePhone | mobile |
 | state | state | st |
-| street | street | StreetAddress |
+| street | street | streetAddress |
 | zip | zipCode | postalCode |
  
 As you noticed, there are only two properties ("user_name" and "active") that are required for users to sign in into ServiceNow - but for ServiceNow to function properly you will probably want to provision many of the other properties as well.
 
->Note: Azure Active Directory Connect does not sync a user object if the userPrincipalName is not populated. There are several other rules that Azure Active Directory Connect follows to determine if a user obejct is synced to Azure Active Directory, you can read more about these rules in [this article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-understanding-default-configuration).
+>Note: Azure Active Directory Connect does not sync a user object if the userPrincipalName is not populated. There are several other rules that Azure Active Directory Connect follows to determine if a user object is synced to Azure Active Directory, you can read more about these rules in [this article](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnectsync-understanding-default-configuration).
 
 #### Azure AD Connect
 If you have not yet installed Azure Active Directory Connect, you can do so by following [these steps](https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnect#install-azure-ad-connect). 
